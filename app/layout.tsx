@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
-import './style.css';
-export const metadata:Metadata={title:'ISA | Previna-se',description:'Converse com a ISA por texto ou voz'};
-export default function Layout({children}:{children:React.ReactNode}){return <html lang="pt-BR"><body>{children}</body></html>}
+import './globals.css';
+export const metadata={title:'Previna-se IA | ISA',description:'ISA, sua assistente em Normas Regulamentadoras'};
+export default function Root({children}:{children:React.ReactNode}){return <html lang="pt-BR"><body>{children}</body></html>}

@@ -1,0 +1,6 @@
+BASE: previna-se-ia-ui-profissional.zip (layout verde original de SST).
+Copie SOMENTE components/Chat.tsx e lib/ai.ts para o projeto ORIGINAL.
+NÃO substitua app/, login, css, API, banco ou package.json.
+Antes do commit: npm run build
+Depois: git add components/Chat.tsx lib/ai.ts && git commit -m "feat: voz na ISA de SST sem alterar layout" && git push origin main
+A chamada usa Web Speech API do navegador; depende de microfone autorizado, HTTPS e suporte do navegador. Teste em Chrome/Edge. Não é ligação telefônica.
