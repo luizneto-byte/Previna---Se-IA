@@ -11,7 +11,7 @@ useEffect(()=>{setVoiceEnabled(typeof window!=='undefined' && !!((window as Spee
 function speak(text:string,after?:()=>void){
  if(!('speechSynthesis' in window)){after?.();return;}
  window.speechSynthesis.cancel(); synthRef.current=true;
- const speech=new SpeechSynthesisUtterance(text.replace(/https?:\\/\\/\\S+/g,'link disponível na conversa').replace(/[\u{1F300}-\u{1FAFF}]/gu,''));
+ const speech=new SpeechSynthesisUtterance(text.replace(/https?:\/\/\S+/g,'link disponível na conversa').replace(/[\u{1F300}-\u{1FAFF}]/gu,''));
  speech.lang='pt-BR';speech.rate=1.03;speech.pitch=1.12;
  const voices=window.speechSynthesis.getVoices();const pt=voices.filter(v=>v.lang.toLowerCase().startsWith('pt-br'));
  speech.voice=pt.find(v=>/female|maria|francisca|luciana|google português/i.test(v.name))||pt[0]||null;
