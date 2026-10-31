@@ -1,60 +1,40 @@
-# Previna-se IA — ISA
+# ISA Voz — Previna-se
 
-Plataforma independente de SST: cadastro/login com sessão segura (JWT em cookie httpOnly), Neon PostgreSQL, chat ISA com Gemini, biblioteca de NR-01 a NR-38, histórico e área administrativa para importar trechos normativos conferidos.
+Projeto Next.js pronto para instalar e publicar na Vercel. Interface em português com chat, leitura das respostas, reconhecimento de fala e uma experiência de "ligação" **dentro do navegador**, sem discagem para número de telefone.
 
 ## Instalação
-1. Instale Node.js 20+.
+
+1. Extraia o ZIP e abra a pasta no Codespaces / VS Code.
 2. Execute `npm install`.
-3. Copie `.env.example` para `.env.local` e preencha `DATABASE_URL`, `AUTH_SECRET` (mín. 32 caracteres), `GEMINI_API_KEY` e `GEMINI_MODEL` compatível com sua conta.
-4. No **SQL Editor do Neon**, execute todo o arquivo `db/schema.sql`.
-5. Execute `npm run dev` e abra `http://localhost:3000`.
-6. Faça seu cadastro. Para tornar o primeiro usuário administrador, no Neon execute `UPDATE users SET role='admin' WHERE email='SEU_EMAIL';` (substitua seu e-mail). **Faça isso apenas para conta confiável.**
-7. Acesse `/admin` para importar trechos de NRs cuja redação e vigência você verificou.
+3. Copie `.env.example` para `.env.local` e preencha `GEMINI_API_KEY` (obtida no Google AI Studio) **ou** `ISA_API_URL` e `ISA_API_TOKEN` do seu backend já existente.
+4. Configure `ADMIN_PASSWORD` (mínimo 12 caracteres) e `SESSION_SECRET` (mínimo 32 caracteres aleatórios).
+5. Execute `npm run dev` e acesse http://localhost:3000.
+6. Para Vercel, faça deploy desta pasta como projeto Next.js e cadastre as mesmas variáveis em Project Settings > Environment Variables.
 
-## Deploy Vercel
-Importe o repositório GitHub como projeto Next.js; configure as mesmas variáveis em **Production** e **Preview** conforme necessário; execute o SQL no Neon; faça redeploy após editar variáveis.
+O modelo padrão é `gemini-3.8-flash`. Se sua conta não tiver acesso, consulte a listagem de modelos do Google AI Studio e configure `GEMINI_MODEL` para um modelo disponível de geração de texto. A API pode ter limites, custos ou cotas, dependendo da conta.
 
-## O que funciona
-- Cadastro, login e logout
-- Controle de acesso por usuário, histórico isolado
-- Chat com ISA por API Gemini se chave configurada
-- Consulta a trechos verificados armazenados no Neon (busca textual em português)
-- Catálogo pesquisável NR-01 a NR-38 e links para portal oficial
-- Painel admin, estatísticas e inclusão de fontes
-- Interface responsiva e avatar original ISA
+## Modo Luiz e privacidade
 
-## Limitações importantes
-- **Não há textos integrais das 36 NRs vigentes pré-carregados**. A biblioteca contém índices e links oficiais; a fundamentação por item depende de importação e conferência dos trechos via `/admin`. Portanto, o MVP **não é um RAG completo** e não deve afirmar conformidade jurídica.
-- NR-02 e NR-27 estão revogadas. Mudanças futuras de vigência precisam ser verificadas no MTE.
-- Documentos automáticos Word/PDF, análise de foto, recuperação de senha por e-mail, quotas/rate limiting robustos e assinatura/gestão empresarial são melhorias futuras.
-- Cadastro público está aberto no MVP; para produção comercial, é recomendado adicionar verificação de e-mail, antiabuso, proteção de rate-limit, LGPD e gestão de planos.
-- A logomarca foi representada com marca tipográfica provisória; substitua por logo oficial no componente de navegação e página inicial quando tiver arquivo autorizado.
+Clique em **Sou o Luiz**, e informe a senha de administrador do servidor. O servidor cria um cookie de sessão assinado válido por 12 horas (HttpOnly). Só a sessão autenticada recebe as brincadeiras de "namorado"; qualquer visitante recebe personalidade divertida sem essa intimidade. O relacionamento é uma brincadeira ficcional de assistente virtual, sem alegar que uma IA tenha relacionamento humano real.
 
-Fonte MTE: https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/ctpp-nrs/normas-regulamentadoras-nrs
+## Voz
 
+- **Ligar para ISA** abre sessão de voz no **navegador**. Ela ouve uma frase, envia o texto à IA, fala a resposta e volta a ouvir após terminar.
+- **Ouvir** reproduz respostas anteriores; botão **Voz** habilita ou desabilita a leitura.
+- Usa Web Speech API do navegador. Depende da disponibilidade de reconhecimento de voz e de uma voz pt-BR instalada. Prefira Chrome/Edge com microfone permitido, em HTTPS (ou localhost). Pode não funcionar em alguns navegadores. Algumas plataformas enviam áudio para serviço de reconhecimento do navegador, sem processamento local.
+- Não é uma ligação telefônica real, nem uma conexão full-duplex com interrupção/barge-in. Para isso é necessária integração separada com API de voz em tempo real e, para telefones, operadora de telefonia.
 
-## Atualização de identidade visual
-A identidade da marca usa o símbolo enviado pelo proprietário em `public/logo-previna.png`, um favicon derivado em `app/icon.png` e a nova mascote em `public/isa.png`. A homepage, navegação e login foram atualizados. Para publicar, envie os arquivos ao repositório e faça novo deploy.
+## Integração com sua ISA atual
 
+Por padrão, usa Gemini texto e **não acessa automaticamente o banco de normas / Neon / RAG** da ISA que você já construiu. Para aproveitar exatamente as respostas do seu sistema, configure `ISA_API_URL` para uma API sua que aceite POST JSON `{messages, systemInstruction, isAdmin}` e retorne JSON `{reply:"..."}`. Use `ISA_API_TOKEN` para autenticação no backend. Confirme a compatibilidade com o seu endpoint, pois a API original não foi fornecida nesta conversa.
 
-## Correção de build (31/10/2026)
-As rotas autenticadas em `app/(platform)/layout.tsx` são renderizadas dinamicamente para evitar prerenderização da rota `/admin` sem sessão. A função `mustAuth` redireciona usuários sem sessão para `/login` em vez de lançar erro na geração das páginas.
+Este projeto é um pacote independente, não uma modificação verificada do seu repositório atual. Para juntar com o projeto existente sem quebrar rotas, será necessário integrar os arquivos e conferir a autenticação real.
 
-## Integração de documentos normativos importados (atualização)
+## Cuidados antes de publicar
 
-- Nova rota: `/pesquisa-nrs` (consulta direta a documentos do Neon, inclusive pendentes, com aviso de revisão).
-- Chat ISA: pesquisa `nr_sources` e documentos em `nr_documentos_pendentes` **somente** quando `status='aprovado'`. O conteúdo não revisado não é enviado ao modelo como fonte normativa.
-- Uma aprovação administrativa deve ocorrer **apenas após** comparar texto, anexos, revisão e vigência com a fonte oficial. Alterar o campo `status` diretamente **não prova** vigência.
-- A busca em documentos integrais fornece prévias e **não extrai itens normativos validados**. O item citado deve ser comprovado nos documentos oficiais; a próxima melhoria é a divisão assistida e revisão por item.
-- A opção `GEMINI_FALLBACK_MODEL` é opcional e habilita modelo alternativo em erros de capacidade, se suportado pela sua API key. O modelo principal permanece em `GEMINI_MODEL`.
-- Nenhuma migração adicional é necessária **se** as tabelas `nr_sources` e `nr_documentos_pendentes` foram criadas anteriormente no mesmo banco de `DATABASE_URL`.
+- Não exponha `GEMINI_API_KEY`, `ADMIN_PASSWORD`, `SESSION_SECRET` ou `ISA_API_TOKEN` no frontend.
+- Proteja o endpoint público com rate limit e monitoramento de gastos antes de divulgar.
+- A autenticação de senha do pacote é simples, própria para demonstração/uso controlado; para produção aberta, prefira autenticação central com rate limit para login.
+- Nunca presuma conformidade de NR sem checar a fonte oficial.
 
-Consulta de conferência no Neon:
-
-```sql
-SELECT status, COUNT(*) AS documentos
-FROM public.nr_documentos_pendentes
-GROUP BY status ORDER BY status;
-```
-
-Ao publicar, preserve a pasta `.github/workflows` e `data/` existente no repositório, se você já tiver adicionado o importador via GitHub Actions. Este ZIP base pode não incluir os arquivos do importador do seu repositório.
+Referências: https://ai.google.dev/api/generate-content e https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
