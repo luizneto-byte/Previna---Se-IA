@@ -35,3 +35,26 @@ Fonte MTE: https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trab
 
 ## Atualização de identidade visual
 A identidade da marca usa o símbolo enviado pelo proprietário em `public/logo-previna.png`, um favicon derivado em `app/icon.png` e a nova mascote em `public/isa.png`. A homepage, navegação e login foram atualizados. Para publicar, envie os arquivos ao repositório e faça novo deploy.
+
+
+## Correção de build (31/10/2026)
+As rotas autenticadas em `app/(platform)/layout.tsx` são renderizadas dinamicamente para evitar prerenderização da rota `/admin` sem sessão. A função `mustAuth` redireciona usuários sem sessão para `/login` em vez de lançar erro na geração das páginas.
+
+## Integração de documentos normativos importados (atualização)
+
+- Nova rota: `/pesquisa-nrs` (consulta direta a documentos do Neon, inclusive pendentes, com aviso de revisão).
+- Chat ISA: pesquisa `nr_sources` e documentos em `nr_documentos_pendentes` **somente** quando `status='aprovado'`. O conteúdo não revisado não é enviado ao modelo como fonte normativa.
+- Uma aprovação administrativa deve ocorrer **apenas após** comparar texto, anexos, revisão e vigência com a fonte oficial. Alterar o campo `status` diretamente **não prova** vigência.
+- A busca em documentos integrais fornece prévias e **não extrai itens normativos validados**. O item citado deve ser comprovado nos documentos oficiais; a próxima melhoria é a divisão assistida e revisão por item.
+- A opção `GEMINI_FALLBACK_MODEL` é opcional e habilita modelo alternativo em erros de capacidade, se suportado pela sua API key. O modelo principal permanece em `GEMINI_MODEL`.
+- Nenhuma migração adicional é necessária **se** as tabelas `nr_sources` e `nr_documentos_pendentes` foram criadas anteriormente no mesmo banco de `DATABASE_URL`.
+
+Consulta de conferência no Neon:
+
+```sql
+SELECT status, COUNT(*) AS documentos
+FROM public.nr_documentos_pendentes
+GROUP BY status ORDER BY status;
+```
+
+Ao publicar, preserve a pasta `.github/workflows` e `data/` existente no repositório, se você já tiver adicionado o importador via GitHub Actions. Este ZIP base pode não incluir os arquivos do importador do seu repositório.
