@@ -1,0 +1,1 @@
+import Normas from '@/components/Normas';export default function Page(){return <><h1>Biblioteca de Normas Regulamentadoras</h1><p className="muted">NR-01 a NR-38, incluindo normas revogadas devidamente sinalizadas. Consulte sempre o texto vigente no Ministério do Trabalho e Emprego.</p><Normas/></>}

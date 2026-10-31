@@ -1,0 +1,9 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE IF NOT EXISTS users (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), name text NOT NULL,email text NOT NULL UNIQUE,password_hash text NOT NULL,company text NOT NULL DEFAULT '',job_title text NOT NULL DEFAULT '',role text NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin')),created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS conversations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,title text NOT NULL DEFAULT 'Nova conversa',created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),conversation_id uuid NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,role text NOT NULL CHECK(role IN ('user','assistant')),content text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS idx_conversations_user ON conversations(user_id,updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_messages_conv ON messages(conversation_id,created_at);
+CREATE TABLE IF NOT EXISTS nr_sources (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),code text NOT NULL,title text NOT NULL,section text NOT NULL,content text NOT NULL,source_url text NOT NULL,version_label text NOT NULL,verified_at date NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS idx_nr_sources_search ON nr_sources USING gin(to_tsvector('portuguese',content));
+CREATE TABLE IF NOT EXISTS favorites(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,message_id uuid NOT NULL REFERENCES messages(id) ON DELETE CASCADE,created_at timestamptz NOT NULL DEFAULT now(),UNIQUE(user_id,message_id));

@@ -1,0 +1,1 @@
+import Chat from '@/components/Chat';export default function Page(){return <><div className="top"><div><h1>Converse com a ISA</h1><p className="muted">Tire dúvidas sobre NRs, riscos, inspeções e documentos técnicos.</p></div><span className="pill">Assistente IA</span></div><Chat/></>}
