@@ -1,0 +1,25 @@
+name: Importar documentos de NRs para revisao no Neon
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Baixar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Node.js somente no GitHub
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar driver PostgreSQL no ambiente do GitHub
+        run: npm install --no-save --no-package-lock --ignore-scripts pg@8
+      - name: Importar documentos para tabela de revisao
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/importar-nrs.cjs
