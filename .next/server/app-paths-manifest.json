@@ -7,13 +7,15 @@
   "/api/chat/route": "app/api/chat/route.js",
   "/api/conversations/[id]/route": "app/api/conversations/[id]/route.js",
   "/icon.png/route": "app/icon.png/route.js",
-  "/login/page": "app/login/page.js",
+  "/api/nr-search/route": "app/api/nr-search/route.js",
   "/page": "app/page.js",
   "/register/page": "app/register/page.js",
+  "/login/page": "app/login/page.js",
   "/(platform)/admin/page": "app/(platform)/admin/page.js",
-  "/(platform)/chat/page": "app/(platform)/chat/page.js",
   "/(platform)/dashboard/page": "app/(platform)/dashboard/page.js",
-  "/(platform)/historico/[id]/page": "app/(platform)/historico/[id]/page.js",
+  "/(platform)/chat/page": "app/(platform)/chat/page.js",
   "/(platform)/historico/page": "app/(platform)/historico/page.js",
-  "/(platform)/normas/page": "app/(platform)/normas/page.js"
+  "/(platform)/historico/[id]/page": "app/(platform)/historico/[id]/page.js",
+  "/(platform)/normas/page": "app/(platform)/normas/page.js",
+  "/(platform)/pesquisa-nrs/page": "app/(platform)/pesquisa-nrs/page.js"
 }

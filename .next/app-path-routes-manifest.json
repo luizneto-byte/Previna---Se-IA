@@ -7,13 +7,15 @@
   "/api/chat/route": "/api/chat",
   "/api/conversations/[id]/route": "/api/conversations/[id]",
   "/icon.png/route": "/icon.png",
-  "/login/page": "/login",
+  "/api/nr-search/route": "/api/nr-search",
   "/page": "/",
   "/register/page": "/register",
+  "/login/page": "/login",
   "/(platform)/admin/page": "/admin",
-  "/(platform)/chat/page": "/chat",
   "/(platform)/dashboard/page": "/dashboard",
-  "/(platform)/historico/[id]/page": "/historico/[id]",
+  "/(platform)/chat/page": "/chat",
   "/(platform)/historico/page": "/historico",
-  "/(platform)/normas/page": "/normas"
+  "/(platform)/historico/[id]/page": "/historico/[id]",
+  "/(platform)/normas/page": "/normas",
+  "/(platform)/pesquisa-nrs/page": "/pesquisa-nrs"
 }

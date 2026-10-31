@@ -92,6 +92,12 @@
       "namedRegex": "^/normas(?:/)?$"
     },
     {
+      "page": "/pesquisa-nrs",
+      "regex": "^/pesquisa\\-nrs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pesquisa\\-nrs(?:/)?$"
+    },
+    {
       "page": "/register",
       "regex": "^/register(?:/)?$",
       "routeKeys": {},
